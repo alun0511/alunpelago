@@ -1,4 +1,4 @@
-WHY NOT A GIF HERE? TO SET THE MODE.
+![image](https://64.media.tumblr.com/5313f4c87542698f6e146cc1c333210a/tumblr_mlo88g8ymk1s5bh5uo1_500.gifv)
 
 # Island name
 
