@@ -1,12 +1,12 @@
 ![image](https://64.media.tumblr.com/5313f4c87542698f6e146cc1c333210a/tumblr_mlo88g8ymk1s5bh5uo1_500.gifv)
 
-# Island name
+# North-east Koster
 
-Some text about your lovely island
+In the beautiful archipelago of Bohuslän the picturesque North-east Koster can be found. With sprawling nature and wildlife above and below the sea it makes the perfect retreat from the bustling city-life. 
 
-# Hotel name
+# Moster Dagnys
 
-Why not add some info about the hotel of your dreams?
+20 feet from the shore a small white-blue cottage can be found. Moster Dagnys has remained the same since it was built nearly a century ago, despite the modernization of surrounding buildings. Dive in to the deep blue sea or ride it on a jet ski, walk around the island on car free roads and breathe the salty breeze. 
 
 # Instructions
 
