@@ -11,7 +11,6 @@ one function to create a guid,
 and one function to control if a guid is valid.
 */
 
-$database = 'database.db';
 
 function connect(string $dbName): object
 {
@@ -29,6 +28,7 @@ function connect(string $dbName): object
     }
     return $db;
 }
+
 
 function guidv4(string $data = null): string
 {

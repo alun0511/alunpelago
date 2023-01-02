@@ -1,0 +1,12 @@
+/* .calendar-wrapper {
+  width: 20%;
+  height: 20%;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+} */
+
+.booked {
+  background-color: green;
+  color: white;
+}

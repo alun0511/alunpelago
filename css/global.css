@@ -1,0 +1,9 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --color-light-breeze: #4dc0fa;
+  --color-light-sun: #faf690;
+  --color-healthy-shrimp: #fa6675;
+}
