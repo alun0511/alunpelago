@@ -1,6 +1,29 @@
 <?php
 
 require __DIR__ . '/hotelFunctions.php';
+require __DIR__ . '/calendar.php';
+
+function roomType($roomID)
+{
+    if ($roomID === 1) {
+        return "enkelrum";
+    }
+    if ($roomID === 2) {
+        return "dubbelrum";
+    }
+    if ($roomID === 3) {
+        return "svit";
+    }
+}
+
+function bookDate(string $arrivalDate, string $departureDate, $roomID)
+{
+
+    // echo '<script type="text/javascript">',
+    // 'confirmBooking();',
+    // '</script>';
+    // echo "Would you like to book room: " . $roomID . " from " . $arrivalDate . " until " . $departureDate . "?";
+}
 
 function selectDate(string $arrivalDate, string $departureDate, string $roomID)
 {
@@ -26,23 +49,47 @@ function selectDate(string $arrivalDate, string $departureDate, string $roomID)
     $unavailable = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($unavailable)) {
-        echo "VILL DU BOKA " . $arrivalDate . " till " . $departureDate . "?";
+        bookDate($arrivalDate, $departureDate, $roomID);
+    } else {
+        echo "The room is unfortunately not available.";
     }
 }
 
+function getBookings(int $roomID): array
+{
 
-if (isset($_POST['arrival'], $_POST['departure'], $_POST['room'])) {
-    $arrivalDate = trim($_POST['arrival']);
-    $departureDate = trim($_POST['departure']);
-    $roomID = trim($_POST['room']);
+    $dbName = 'database.db';
+    $db = connect($dbName);
 
-    $booking = [
-        "arrival_date" => $arrivalDate,
-        "departure_date" => $departureDate,
-        "roomID" => $roomID,
-    ];
+    $stmtReservations = $db->prepare("SELECT reservations.arrival_date, reservations.departure_date, rooms.id FROM room_reservation
+    INNER JOIN rooms
+        ON rooms.id = room_reservation.room_id
+    INNER JOIN reservations
+        ON reservations.id = room_reservation.reservation_id
+    WHERE room_reservation.room_id = :room_id");
 
-    $jsonBooking = json_encode($booking);
+    $stmtReservations->bindParam(':room_id', $roomID);
 
-    selectDate($arrivalDate, $departureDate, $roomID);
+    $stmtReservations->execute();
+
+    $roomBookings = $stmtReservations->fetchAll(PDO::FETCH_ASSOC);
+
+    return $roomBookings;
+}
+
+
+function drawCalendar($roomID, $calendarID)
+{
+
+    foreach (getBookings($roomID) as $roomBooking) {
+
+        $calendarID->addEvent(
+            $roomBooking['arrival_date'],
+            $roomBooking['departure_date'],
+            "",
+            true,
+
+        );
+    }
+    echo $calendarID->draw(date('2023-01-01'));
 }
