@@ -51,11 +51,19 @@ if (isset($_POST['arrival'], $_POST['departure'], $_POST['room'])) {
     </header>
     <main>
         <div class="calendar-wrapper">
-            <?php
-            drawCalendar(1, $calendar1);
-            drawCalendar(2, $calendar2);
-            drawCalendar(3, $calendar3);
-            ?>
+            <div class="rooms">
+                <h3>Enkelrum</h3>
+                <?php drawCalendar(1, $calendar1); ?>
+            </div>
+            <div class="rooms">
+                <h3>Dubbelrum</h3>
+                <?php drawCalendar(2, $calendar2); ?>
+            </div>
+            <div class="rooms">
+                <h3>Svit</h3>
+                <?php drawCalendar(3, $calendar3); ?>
+            </div>
+
         </div>
         <form action="" method="post">
             <label for="room">Choose a room:</label>
