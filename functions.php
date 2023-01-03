@@ -6,26 +6,17 @@ require __DIR__ . '/calendar.php';
 function roomType($roomID)
 {
     if ($roomID === 1) {
-        return "enkelrum";
+        echo "enkelrum";
     }
     if ($roomID === 2) {
-        return "dubbelrum";
+        echo "dubbelrum";
     }
     if ($roomID === 3) {
-        return "svit";
+        echo "svit";
     }
 }
 
-function bookDate(string $arrivalDate, string $departureDate, $roomID)
-{
-
-    // echo '<script type="text/javascript">',
-    // 'confirmBooking();',
-    // '</script>';
-    // echo "Would you like to book room: " . $roomID . " from " . $arrivalDate . " until " . $departureDate . "?";
-}
-
-function selectDate(string $arrivalDate, string $departureDate, string $roomID)
+function selectDate(string $name, string $arrivalDate, string $departureDate, string $roomID)
 {
     $dbName = 'database.db';
     $db = connect($dbName);
@@ -49,35 +40,82 @@ function selectDate(string $arrivalDate, string $departureDate, string $roomID)
     $unavailable = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($unavailable)) {
-        bookDate($arrivalDate, $departureDate, $roomID);
+        insertDate($name, $arrivalDate, $departureDate, $roomID);
     } else {
         echo "The room is unfortunately not available.";
     }
 }
 
+
+
+// insert reservation
+function insertDate(string $name, string $arrivalDate, string $departureDate, int $roomID)
+{
+
+    $dbName = 'database.db';
+    $db = connect($dbName);
+
+    $stmtInsert = $db->prepare("
+
+    INSERT INTO reservations
+    (name, arrival_date, departure_date)
+    VALUES
+    (:name, :arrival_date, :departure_date)");
+
+
+    $stmtInsert->bindParam(':name', $name);
+    $stmtInsert->bindParam(':arrival_date', $arrivalDate);
+    $stmtInsert->bindParam(':departure_date', $departureDate);
+
+    $stmtInsert->execute();
+
+    // $stmtUpdate = $db->prepare("
+
+    // INSERT INTO room_reservation
+    // (reservation_id)
+    // SELECT
+    // (id)");
+
+
+    // $stmtUpdate->bindParam(':arrival_date', $arrivalDate);
+    // $stmtUpdate->bindParam(':departure_date', $departureDate);
+
+    // $stmtUpdate->execute();
+
+
+
+    // echo "Would you like to book room: " . roomType($roomID) . " from " . $arrivalDate . " until " . $departureDate . "?";
+    // echo '<script type="text/javascript">',
+    // 'confirmBooking();',
+    // '</script>';
+}
+
+
+// selects all reservations from the database on the provided roomID.
 function getBookings(int $roomID): array
 {
 
     $dbName = 'database.db';
     $db = connect($dbName);
 
-    $stmtReservations = $db->prepare("SELECT reservations.arrival_date, reservations.departure_date, rooms.id FROM room_reservation
+    $stmtSelect = $db->prepare("SELECT reservations.arrival_date, reservations.departure_date, rooms.id FROM room_reservation
     INNER JOIN rooms
         ON rooms.id = room_reservation.room_id
     INNER JOIN reservations
         ON reservations.id = room_reservation.reservation_id
     WHERE room_reservation.room_id = :room_id");
 
-    $stmtReservations->bindParam(':room_id', $roomID);
+    $stmtSelect->bindParam(':room_id', $roomID);
 
-    $stmtReservations->execute();
+    $stmtSelect->execute();
 
-    $roomBookings = $stmtReservations->fetchAll(PDO::FETCH_ASSOC);
+    $roomBookings = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
 
     return $roomBookings;
 }
 
 
+// uses the array of dates from provided roomID (getBookings($roomID)) and adds these to three seperate calendars for each room.
 function drawCalendar($roomID, $calendarID)
 {
 

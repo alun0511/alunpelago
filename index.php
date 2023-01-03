@@ -9,22 +9,22 @@ use GuzzleHttp\Exception\ClientException;
 // POST arrival, departure and room
 
 
-
-
 if (isset($_POST['arrival'], $_POST['departure'], $_POST['room'])) {
+
+    $name = trim($_POST['name']);
     $arrivalDate = trim($_POST['arrival']);
     $departureDate = trim($_POST['departure']);
     $roomID = trim($_POST['room']);
 
-    $reservation = [
-        "arrival_date" => $arrivalDate,
-        "departure_date" => $departureDate,
-        "roomID" => $roomID,
-    ];
+    // $reservation = [
+    //     "arrival_date" => $arrivalDate,
+    //     "departure_date" => $departureDate,
+    //     "roomID" => $roomID,
+    // ];
 
-    $jsonReservation = json_encode($reservation);
+    // $jsonReservation = json_encode($reservation);
 
-    selectDate($arrivalDate, $departureDate, $roomID);
+    selectDate($name, $arrivalDate, $departureDate, $roomID);
 }
 
 
@@ -77,7 +77,7 @@ if (isset($_POST['arrival'], $_POST['departure'], $_POST['room'])) {
             <label for="departure">Date of departure:</label>
             <input type="date" name="departure" class="form-input" min="2023-01-01" max="2023-01-31" required>
             <label for="name">Name:</label>
-            <input type="text" name="name" class="form-input">
+            <input type="text" name="name" class="form-input" required>
             <label for="voucher">Voucher:</label>
             <input type="text" name="voucher" class="form-input">
             <button name="submit" type="submit">Submit reservation</button>
