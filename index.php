@@ -2,9 +2,8 @@
 
 require 'vendor/autoload.php';
 require __DIR__ . '/functions.php';
+require __DIR__ . '/guzzle.php';
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 
 // POST arrival, departure and room
 
@@ -16,6 +15,23 @@ if (isset($_POST['arrival'], $_POST['departure'], $_POST['room'])) {
     $departureDate = trim($_POST['departure']);
     $roomID = trim($_POST['room']);
 
+    $message = "";
+
+    if ($arrivalDate !== $departureDate) {
+
+        if ($arrivalDate < $departureDate) {
+            selectDate($name, $arrivalDate, $departureDate, $roomID);
+        } else {
+            $message = "Date of departure has to be after the arrival.";
+        }
+    } else {
+        $message = "Date of arrival can't be the same as date of departure";
+    }
+
+
+
+    echo $message;
+
     // $reservation = [
     //     "arrival_date" => $arrivalDate,
     //     "departure_date" => $departureDate,
@@ -23,8 +39,6 @@ if (isset($_POST['arrival'], $_POST['departure'], $_POST['room'])) {
     // ];
 
     // $jsonReservation = json_encode($reservation);
-
-    selectDate($name, $arrivalDate, $departureDate, $roomID);
 }
 
 
