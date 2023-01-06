@@ -68,26 +68,6 @@ function insertDate(string $name, string $arrivalDate, string $departureDate, in
     $stmtInsert->bindParam(':departure_date', $departureDate);
 
     $stmtInsert->execute();
-
-    // $stmtUpdate = $db->prepare("
-
-    // INSERT INTO room_reservation
-    // (reservation_id)
-    // SELECT
-    // (id)");
-
-
-    // $stmtUpdate->bindParam(':arrival_date', $arrivalDate);
-    // $stmtUpdate->bindParam(':departure_date', $departureDate);
-
-    // $stmtUpdate->execute();
-
-
-
-    // echo "Would you like to book room: " . roomType($roomID) . " from " . $arrivalDate . " until " . $departureDate . "?";
-    // echo '<script type="text/javascript">',
-    // 'confirmBooking();',
-    // '</script>';
 }
 
 
