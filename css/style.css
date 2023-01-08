@@ -58,3 +58,7 @@ button {
   box-shadow: 4px 6px darkred;
   background-color: white;
 }
+button:active {
+  transition: ease 0.3s;
+  box-shadow: none;
+}

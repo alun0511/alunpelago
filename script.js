@@ -1,13 +1,10 @@
-// const url = 'https://www.yrgopelago.se/centralbank/transferCode';
+const form = document.querySelector('form');
+const arrivalDate = form.querySelector('.arrival');
+const departureDate = form.querySelector('.departure');
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+});
 
-// fetch(url)
-//   .then((response) => {
-//     return response.json();
-//   })
-//   .then((data) => {
-//     let result = data;
-//     console.log(data);
-//   })
-//   .catch(function (error) {
-//     console.log(error);
-//   });
+// arrivalDate.addEventListener('change', (e) => {
+//   console.log(Date(arrivalDate.value));
+// });

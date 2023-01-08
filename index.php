@@ -1,26 +1,30 @@
 <?php
 
 require 'vendor/autoload.php';
-require __DIR__ . '/functions.php';
-require __DIR__ . '/guzzle.php';
+require __DIR__ . '/hotelFunctions.php';
 
+$totalCost = "";
+
+
+
+$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]logbook.json/";
 
 // POST arrival, departure and room
-
 
 if (isset($_POST['arrival'], $_POST['departure'], $_POST['room'])) {
 
     $name = trim($_POST['name']);
-    $arrivalDate = trim($_POST['arrival']);
-    $departureDate = trim($_POST['departure']);
+    $arrivalDate = $_POST['arrival'];
+    $departureDate = $_POST['departure'];
     $roomID = trim($_POST['room']);
 
+    $totalCost = countTotalCost($arrivalDate, $departureDate, $roomID);
     $message = "";
 
     if ($arrivalDate !== $departureDate) {
 
         if ($arrivalDate < $departureDate) {
-            selectDate($name, $arrivalDate, $departureDate, $roomID);
+            selectDate($name, $arrivalDate, $departureDate, $roomID, $totalCost, $actual_link);
         } else {
             $message = "Date of departure has to be after the arrival.";
         }
@@ -29,16 +33,17 @@ if (isset($_POST['arrival'], $_POST['departure'], $_POST['room'])) {
     }
 
 
-
     echo $message;
+}
 
-    // $reservation = [
-    //     "arrival_date" => $arrivalDate,
-    //     "departure_date" => $departureDate,
-    //     "roomID" => $roomID,
-    // ];
 
-    // $jsonReservation = json_encode($reservation);
+if (isset($_POST['transfercode'])) {
+    $transfercode = $_POST['transfercode'];
+    if (transferCodeValidator($transfercode, $totalCost) === true) {
+        echo "code is valid";
+    } else {
+        echo "code is invalid";
+    }
 }
 
 
@@ -87,15 +92,19 @@ if (isset($_POST['arrival'], $_POST['departure'], $_POST['room'])) {
                 <option value="3">Svit</option>
             </select>
             <label for="arrival">Date of arrival:</label>
-            <input type="date" name="arrival" class="form-input" min="2023-01-01" max="2023-01-31" required>
+            <input type="date" name="arrival" class="form-input arrival" min="2023-01-01" max="2023-01-31" required>
             <label for="departure">Date of departure:</label>
-            <input type="date" name="departure" class="form-input" min="2023-01-01" max="2023-01-31" required>
+            <input type="date" name="departure" class="form-input departure" min="2023-01-01" max="2023-01-31" required>
             <label for="name">Name:</label>
             <input type="text" name="name" class="form-input" required>
-            <label for="voucher">Voucher:</label>
-            <input type="text" name="voucher" class="form-input">
+            <label for="transfercode">Transfercode:</label>
+            <input type="text" name="transfercode" class="form-input">
             <button name="submit" type="submit">Submit reservation</button>
         </form>
+
+        <div class="totalcost">
+            <h3> Price total: <?= $totalCost ?> credits</h3>
+        </div>
 
     </main>
     <script src="script.js"></script>
