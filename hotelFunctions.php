@@ -10,7 +10,6 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\AppendStream;
 use GuzzleHttp\Psr7\Request;
 
-// header('Content-Type: application/json');
 
 /*
 Here's something to start your career as a hotel manager.
@@ -65,30 +64,42 @@ function isValidUuid(string $uuid): bool
     return true;
 }
 
+// selects all reservations from the database on the provided roomID.
+function getBookings(int $roomID): array
+{
+
+    $dbName = 'database.db';
+    $db = connect($dbName);
+
+    $stmtSelect = $db->prepare("SELECT reservations.arrival_date, reservations.departure_date, rooms.id FROM room_reservation
+    INNER JOIN rooms
+        ON rooms.id = room_reservation.room_id
+    INNER JOIN reservations
+        ON reservations.id = room_reservation.reservation_id
+    WHERE room_reservation.room_id = :room_id");
+
+    $stmtSelect->bindParam(':room_id', $roomID);
+
+    $stmtSelect->execute();
+
+    $roomBookings = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+    return $roomBookings;
+}
 
 function roomType($roomID)
 {
-    if ($roomID === 1) {
+    if ($roomID = 1) {
         return "enkelrum";
-    } elseif ($roomID === 2) {
+    } elseif ($roomID = 2) {
         return "dubbelrum";
-    } elseif ($roomID === 3) {
+    } elseif ($roomID = 3) {
         return "svit";
     }
 }
 
-function selectDate(string $name, string $arrivalDate, string $departureDate, int $roomID, $totalCost, $actual_link)
-{
-    if (testDate($name, $arrivalDate, $departureDate, $roomID)) {
-        echo "The " . roomType($roomID) . " is free between " . $arrivalDate . " and " . $departureDate . "! <br>";
-        // insertDate($name, $arrivalDate, $departureDate, $roomID);
-        successfulBooking($arrivalDate, $departureDate, $totalCost, $actual_link);
-    } else {
-        echo "The room is unfortunately not available.";
-    }
-}
+// testDate is called within following function selectDate
 
-function testDate(string $name, string $arrivalDate, string $departureDate, int $roomID): bool
+function testDate(string $name, string $arrivalDate, string $departureDate, string $roomID): bool | string
 {
     $dbName = 'database.db';
     $db = connect($dbName);
@@ -109,12 +120,92 @@ function testDate(string $name, string $arrivalDate, string $departureDate, int 
 
     $stmt->execute();
 
-    $unavailable = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $conflictingBookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if (empty($unavailable)) {
+    if (empty($conflictingBookings)) {
         return true;
     } else {
-        return false;
+        return "The room is unfortunately not free between " . $arrivalDate . " and " . $departureDate . ".";
+    }
+}
+
+function selectDate(string $name, string $arrivalDate, string $departureDate, string $roomID): bool | string
+{
+    if ($arrivalDate !== $departureDate) {
+        if ($arrivalDate < $departureDate) {
+            if (testDate($name, $arrivalDate, $departureDate, $roomID) === true) {
+                return true;
+            } else {
+                return "The room is unfortunately not available between these dates";
+            }
+        } else {
+            return "Date of departure has to be after the arrival.";
+        }
+    } else {
+        return "Date of arrival can't be the same as date of departure";
+    }
+}
+
+// uses the array of dates from provided roomID (getBookings($roomID)) and adds these to three seperate calendars for each room.
+
+function drawCalendar(int $roomID, object $calendarID)
+{
+
+    foreach (getBookings($roomID) as $roomBooking) {
+
+        $calendarID->addEvent(
+            $roomBooking['arrival_date'],
+            $roomBooking['departure_date'],
+            "",
+            true,
+
+        );
+    }
+    echo $calendarID->draw(date('2023-01-01'));
+}
+
+function transferCodeValidator(string $transfercode, int $totalCost): bool | string
+{
+
+    if (!isValidUuid($transfercode)) {
+        return "Transfercode not valid.";
+    } else {
+
+
+        $client = new \GuzzleHttp\Client();
+
+        $options = [
+            'form_params' => [
+                'transferCode' => $transfercode,
+                'totalcost' => $totalCost
+            ]
+        ];
+
+        $response = $client->post("https://www.yrgopelago.se/centralbank/transferCode", $options);
+        $response = $response->getBody()->getContents();
+        $response = json_decode($response, true);
+
+        if (!array_key_exists("amount", $response) || $response["amount"] < $totalCost) {
+            return "Sorry, not enough money has been assigned to this transfercode. Please check the price displayed.";
+        }
+
+        return true;
+    }
+}
+
+function countTotalCost(string $arrivalDate, string $departureDate, string $roomID): int
+{
+    $arrivalDateTime = new DateTime($arrivalDate);
+    $departureDateTime = new DateTime($departureDate);
+    $interval = $arrivalDateTime->diff($departureDateTime);
+    $daysInterval = $interval->days;
+
+    if ($roomID === "1") {
+        return ($daysInterval * 2);
+    } elseif ($roomID === "2") {
+        return ($daysInterval * 6);
+    } elseif ($roomID === "3") {
+        return ($daysInterval * 8);
     }
 }
 
@@ -155,173 +246,34 @@ function insertDate(string $name, string $arrivalDate, string $departureDate, in
 }
 
 
-// selects all reservations from the database on the provided roomID.
-function getBookings(int $roomID): array
-{
+if (isset($_POST['name'], $_POST['arrival'], $_POST['departure'], $_POST['room'], $_POST['transfercode'])) {
 
-    $dbName = 'database.db';
-    $db = connect($dbName);
+    $name = htmlspecialchars($_POST['name']);
+    $arrivalDate = htmlspecialchars($_POST['arrival']);
+    $departureDate = htmlspecialchars($_POST['departure']);
+    $roomID = htmlspecialchars($_POST['room']);
 
-    $stmtSelect = $db->prepare("SELECT reservations.arrival_date, reservations.departure_date, rooms.id FROM room_reservation
-    INNER JOIN rooms
-        ON rooms.id = room_reservation.room_id
-    INNER JOIN reservations
-        ON reservations.id = room_reservation.reservation_id
-    WHERE room_reservation.room_id = :room_id");
+    $totalCost = countTotalCost($arrivalDate, $departureDate, $roomID);
 
-    $stmtSelect->bindParam(':room_id', $roomID);
+    selectDate($name, $arrivalDate, $departureDate, $roomID, $totalCost);
 
-    $stmtSelect->execute();
+    $transfercode = $_POST['transfercode'];
 
-    $roomBookings = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
-    return $roomBookings;
-}
+    $result = transferCodeValidator($transfercode, $totalCost);
+    if ($result !== true) $message['error'] = $result;
+    $result = selectDate($name, $arrivalDate, $departureDate, $roomID);
+    if ($result !== true) $message['error'] = $result;
 
-
-// uses the array of dates from provided roomID (getBookings($roomID)) and adds these to three seperate calendars for each room.
-
-function drawCalendar(int $roomID, object $calendarID)
-{
-
-    foreach (getBookings($roomID) as $roomBooking) {
-
-        $calendarID->addEvent(
-            $roomBooking['arrival_date'],
-            $roomBooking['departure_date'],
-            "",
-            true,
-
-        );
+    if (isset($message['error'])) {
+        echo json_encode($message);
     }
-    echo $calendarID->draw(date('2023-01-01'));
+    // if (
+    //     transferCodeValidator($transfercode, $totalCost) === true &&
+    //     selectDate($name, $arrivalDate, $departureDate, $roomID) === true
+    // ) {
+    //     // insertDate($name, $arrivalDate, $departureDate, $roomID);
+    //     // successfulBooking($arrivalDate, $departureDate, $totalCost);
+    // } else {
+
+    // }
 }
-
-function transferCodeValidator($transfercode, $totalCost)
-{
-
-    if (!isValidUuid($transfercode)) {
-        echo "Transfercode not valid. <br>";
-    } else {
-
-
-        $client = new \GuzzleHttp\Client();
-
-        $options = [
-            'form_params' => [
-                'transferCode' => $transfercode,
-                'totalcost' => $totalCost
-            ]
-        ];
-
-        $response = $client->post("https://www.yrgopelago.se/centralbank/transferCode", $options);
-        $response = $response->getBody()->getContents();
-        $response = json_decode($response, true);
-
-        if (!array_key_exists("amount", $response) || $response["amount"] < $totalCost) {
-            echo "Sorry, not enough money has been assigned to this transfercode. Please check the price displayed. <br>";
-        }
-
-        return true;
-    }
-}
-
-function countTotalCost($arrivalDate, $departureDate, $roomID)
-{
-    $arrivalDateTime = new DateTime($arrivalDate);
-    $departureDateTime = new DateTime($departureDate);
-    $interval = $arrivalDateTime->diff($departureDateTime);
-    $daysInterval = $interval->days;
-
-    if ($roomID === "1") {
-        return ($daysInterval * 2);
-    } elseif ($roomID === "2") {
-        return ($daysInterval * 6);
-    } elseif ($roomID === "3") {
-        return ($daysInterval * 8);
-    }
-}
-
-function successfulBooking($arrivalDate, $departureDate, $totalCost, $actual_link)
-{
-
-    $bookingResponse = [
-        "island" => "Pelagon",
-        "hotel" => "Moster Dagnys",
-        "arrival_date" => $arrivalDate,
-        "departure_date" => $departureDate,
-        "total_cost" => $totalCost,
-        "stars" => "1",
-        "features" => ["name" => "", "cost" => ""],
-        "addtional_info" => "Thank you for making the right choice by staying at Moster Dagnys. We hope you will enjoy your stay."
-    ];
-
-    $logbookDir = __DIR__ . '/logbook.json';
-    $logbook = file_get_contents($logbookDir);
-
-    $logbook = json_decode($logbook, true);
-
-    $logbook['vacation'][] = $bookingResponse;
-
-    json_encode($logbook);
-
-
-    if (file_put_contents($logbookDir, $logbook)) {
-        echo "JSON created succesfully";
-    } else echo "JSON created unsuccesfully";
-
-
-
-    // header('Location: ' . $actual_link);
-}
-
-
-
-
-
-/*
-
-    island
-    hotel
-    arrival_date
-    departure_date
-    total_cost
-    stars
-    features
-    additional_info. (This last property is where you can put in a personal greeting from your hotel, an image URL, link to a youtube video or whatever you like.)
- */
-
-// function checkTransferCode($transferCode, $totalCost): string | bool
-// {
-//     if (!isValidUuid($transferCode)) {
-//         return "Invalid transferCode format";
-//     } else {
-//         $client = new GuzzleHttp\Client();
-//         $options = [
-//             'form_params' => [
-//                 "transferCode" => $transferCode, "totalCost" => $totalCost
-//             ]
-//         ];
-
-
-//         try {
-//             $response = $client->post("https://www.yrgopelago.se/centralbank/transferCode", $options);
-//             $response = $response->getBody()->getContents();
-//             $response = json_decode($response, true);
-//         } catch (\Exception $e) {
-//             return "Error occured!" . $e;
-//         }
-//         if (array_key_exists("error", $response)) {
-//             if ($response["error"] == "Not a valid GUID") {
-//                 //The banks error message for a transferCode not being valid for enough can be misleading.
-//                 return "An error has occured! $response[error]. This could be due to your Transfercode not being vaild for enough credit.";
-//             }
-//             return "An error has occured! $response[error]";
-//         }
-//         if (!array_key_exists("amount", $response) || $response["amount"] < $totalCost) {
-
-//             return "Transfer code is not valdid for enough money.";
-//         }
-//     }
-
-//     return true;
-// }

@@ -3,48 +3,6 @@
 require 'vendor/autoload.php';
 require __DIR__ . '/hotelFunctions.php';
 
-$totalCost = "";
-
-
-
-$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]logbook.json/";
-
-// POST arrival, departure and room
-
-if (isset($_POST['arrival'], $_POST['departure'], $_POST['room'])) {
-
-    $name = trim($_POST['name']);
-    $arrivalDate = $_POST['arrival'];
-    $departureDate = $_POST['departure'];
-    $roomID = trim($_POST['room']);
-
-    $totalCost = countTotalCost($arrivalDate, $departureDate, $roomID);
-    $message = "";
-
-    if ($arrivalDate !== $departureDate) {
-
-        if ($arrivalDate < $departureDate) {
-            selectDate($name, $arrivalDate, $departureDate, $roomID, $totalCost, $actual_link);
-        } else {
-            $message = "Date of departure has to be after the arrival.";
-        }
-    } else {
-        $message = "Date of arrival can't be the same as date of departure";
-    }
-
-
-    echo $message;
-}
-
-
-if (isset($_POST['transfercode'])) {
-    $transfercode = $_POST['transfercode'];
-    if (transferCodeValidator($transfercode, $totalCost) === true) {
-        echo "code is valid";
-    } else {
-        echo "code is invalid";
-    }
-}
 
 
 ?>
@@ -86,7 +44,7 @@ if (isset($_POST['transfercode'])) {
         </div>
         <form action="" method="post">
             <label for="room">Choose a room:</label>
-            <select name="room" required>
+            <select class="roomSelect" name="room" required>
                 <option value="1">Enkelrum</option>
                 <option value="2">Dubbelrum</option>
                 <option value="3">Svit</option>
@@ -102,8 +60,8 @@ if (isset($_POST['transfercode'])) {
             <button name="submit" type="submit">Submit reservation</button>
         </form>
 
-        <div class="totalcost">
-            <h3> Price total: <?= $totalCost ?> credits</h3>
+        <div>
+            <h3 class="totalcost"></h3>
         </div>
 
     </main>
