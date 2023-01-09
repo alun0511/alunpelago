@@ -4,9 +4,9 @@ const departureDate = form.querySelector('.departure');
 const roomSelect = form.querySelector('.roomSelect');
 const totalcostH3 = document.querySelector('.totalcost');
 
-form.addEventListener('submit', (e) => {
-  // e.preventDefault();
-});
+// form.addEventListener('submit', (e) => {
+//   // e.preventDefault();
+// });
 
 const calcPrice = () => {
   if ((arrivalDate.value != '') & (departureDate.value != '')) {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/calendar.php';
 
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\AppendStream;
@@ -86,6 +87,25 @@ function getBookings(int $roomID): array
     return $roomBookings;
 }
 
+// drawCalendar uses the array of dates from getBookings to draw each calendar depending on the roomID
+
+function drawCalendar(int $roomID, object $calendarID)
+{
+
+    foreach (getBookings($roomID) as $roomBooking) {
+
+        $calendarID->addEvent(
+            $roomBooking['arrival_date'],
+            $roomBooking['departure_date'],
+            "",
+            true,
+
+        );
+    }
+    echo $calendarID->draw(date('2023-01-01'));
+}
+
+
 function roomType($roomID)
 {
     if ($roomID = 1) {
@@ -101,6 +121,12 @@ function roomType($roomID)
 
 function testDate(string $name, string $arrivalDate, string $departureDate, string $roomID): bool | string
 {
+    if ($arrivalDate === $departureDate)
+        return "Date of arrival can't be the same as date of departure";
+
+    if ($arrivalDate > $departureDate)
+        return "Date of departure has to be after the arrival.";
+
     $dbName = 'database.db';
     $db = connect($dbName);
 
@@ -125,51 +151,16 @@ function testDate(string $name, string $arrivalDate, string $departureDate, stri
     if (empty($conflictingBookings)) {
         return true;
     } else {
-        return "The room is unfortunately not free between " . $arrivalDate . " and " . $departureDate . ".";
+        return "The room is unfortunately not available between these dates";
     }
-}
-
-function selectDate(string $name, string $arrivalDate, string $departureDate, string $roomID): bool | string
-{
-    if ($arrivalDate !== $departureDate) {
-        if ($arrivalDate < $departureDate) {
-            if (testDate($name, $arrivalDate, $departureDate, $roomID) === true) {
-                return true;
-            } else {
-                return "The room is unfortunately not available between these dates";
-            }
-        } else {
-            return "Date of departure has to be after the arrival.";
-        }
-    } else {
-        return "Date of arrival can't be the same as date of departure";
-    }
-}
-
-// uses the array of dates from provided roomID (getBookings($roomID)) and adds these to three seperate calendars for each room.
-
-function drawCalendar(int $roomID, object $calendarID)
-{
-
-    foreach (getBookings($roomID) as $roomBooking) {
-
-        $calendarID->addEvent(
-            $roomBooking['arrival_date'],
-            $roomBooking['departure_date'],
-            "",
-            true,
-
-        );
-    }
-    echo $calendarID->draw(date('2023-01-01'));
 }
 
 function transferCodeValidator(string $transfercode, int $totalCost): bool | string
 {
 
-    if (!isValidUuid($transfercode)) {
-        return "Transfercode not valid.";
-    } else {
+    if (!isValidUuid($transfercode)) return "Transfercode not valid.";
+
+    else {
 
 
         $client = new \GuzzleHttp\Client();
@@ -193,12 +184,36 @@ function transferCodeValidator(string $transfercode, int $totalCost): bool | str
     }
 }
 
-function countTotalCost(string $arrivalDate, string $departureDate, string $roomID): int
+function deposit(string $transfercode): bool
+{
+
+    $client = new \GuzzleHttp\Client();
+
+    $options = [
+        'form_params' => [
+            'user' => 'Alfred',
+            'transferCode' => $transfercode
+        ]
+    ];
+    try {
+
+        $response = $client->post("https://www.yrgopelago.se/centralbank/transferCode", $options);
+        $response = $response->getBody()->getContents();
+        $response = json_decode($response, true);
+
+        return true;
+    } catch (\Exception $e) {
+        return "There was an issue with your bank deposit.";
+    }
+}
+
+function countTotalCost(string $arrivalDate, string $departureDate, string $roomID)
 {
     $arrivalDateTime = new DateTime($arrivalDate);
     $departureDateTime = new DateTime($departureDate);
     $interval = $arrivalDateTime->diff($departureDateTime);
     $daysInterval = $interval->days;
+    $daysInterval = (int)$daysInterval;
 
     if ($roomID === "1") {
         return ($daysInterval * 2);
@@ -211,7 +226,7 @@ function countTotalCost(string $arrivalDate, string $departureDate, string $room
 
 
 // insert reservation
-function insertDate(string $name, string $arrivalDate, string $departureDate, int $roomID)
+function insertDate(string $name, string $arrivalDate, string $departureDate, string $roomID)
 {
 
     $dbName = 'database.db';
@@ -243,37 +258,4 @@ function insertDate(string $name, string $arrivalDate, string $departureDate, in
     $stmtInsert2->bindParam(':room_id', $roomID);
     $stmtInsert2->bindParam(':reservation_id', $reservationId);
     $stmtInsert2->execute();
-}
-
-
-if (isset($_POST['name'], $_POST['arrival'], $_POST['departure'], $_POST['room'], $_POST['transfercode'])) {
-
-    $name = htmlspecialchars($_POST['name']);
-    $arrivalDate = htmlspecialchars($_POST['arrival']);
-    $departureDate = htmlspecialchars($_POST['departure']);
-    $roomID = htmlspecialchars($_POST['room']);
-
-    $totalCost = countTotalCost($arrivalDate, $departureDate, $roomID);
-
-    selectDate($name, $arrivalDate, $departureDate, $roomID, $totalCost);
-
-    $transfercode = $_POST['transfercode'];
-
-    $result = transferCodeValidator($transfercode, $totalCost);
-    if ($result !== true) $message['error'] = $result;
-    $result = selectDate($name, $arrivalDate, $departureDate, $roomID);
-    if ($result !== true) $message['error'] = $result;
-
-    if (isset($message['error'])) {
-        echo json_encode($message);
-    }
-    // if (
-    //     transferCodeValidator($transfercode, $totalCost) === true &&
-    //     selectDate($name, $arrivalDate, $departureDate, $roomID) === true
-    // ) {
-    //     // insertDate($name, $arrivalDate, $departureDate, $roomID);
-    //     // successfulBooking($arrivalDate, $departureDate, $totalCost);
-    // } else {
-
-    // }
 }

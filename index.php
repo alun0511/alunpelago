@@ -4,7 +4,6 @@ require 'vendor/autoload.php';
 require __DIR__ . '/hotelFunctions.php';
 
 
-
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +41,7 @@ require __DIR__ . '/hotelFunctions.php';
             </div>
 
         </div>
-        <form action="" method="post">
+        <form action="./booking.php" method="post">
             <label for="room">Choose a room:</label>
             <select class="roomSelect" name="room" required>
                 <option value="1">Enkelrum</option>
