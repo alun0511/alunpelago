@@ -13,14 +13,16 @@ In the beautiful archipelago of Bohuslän the picturesque North-east Koster can 
 If your project requires some installation or similar, please inform your user 'bout it. For instance, if you want a more decent indentation of your .php files, you could edit [.editorconfig]('/.editorconfig').
 
 # Code review
+Axel Enghamre
 
-1. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
-2. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
-3. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
-4. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
-5. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
-6. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
-7. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
-8. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
-9. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
-10. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
+1. index.php:1-7 - alla php filer bör vara i strikt läge
+2. hotelFunctions.php:6 - calendar har mer med index.php att göra så den kan inkluderas där istället.
+3. calendar.php:- denna fil bör också vara i strikt läge.
+4. validator.php:- denna fil gör ingeting så den kan bort.
+5. booking.php:10 - homePage används aldrig så denna variabeln kan tas bort.
+6. booking.php:12 - 59 - eftersom denna if kontrollerar input bör ett fel-medlande ges om den inte uppfylls.
+7. booking.php:37 - insertDate bör ske efter kontroll av result från deposit.
+8. script.js:13 - 32 - var bör inte användas utan antingen const eller let.
+9. script.js:30 - detta behöver inte loggas för användaren.
+10. hotelFunctions.php: - funktioner som inte returnerar något bör ha void som retur typ.
+
