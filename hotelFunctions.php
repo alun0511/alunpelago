@@ -13,8 +13,6 @@ use GuzzleHttp\Psr7\Request;
 
 
 /*
-Here's something to start your career as a hotel manager.
-
 One function to connect to the database you want (it will return a PDO object which you then can use.)
     For instance: $db = connect('hotel.db');
                   $db->prepare("SELECT * FROM bookings");
@@ -184,28 +182,6 @@ function transferCodeValidator(string $transfercode, int $totalCost): bool | str
     }
 }
 
-function deposit(string $transfercode): bool
-{
-
-    $client = new \GuzzleHttp\Client();
-
-    $options = [
-        'form_params' => [
-            'user' => 'Alfred',
-            'transferCode' => $transfercode
-        ]
-    ];
-    try {
-
-        $response = $client->post("https://www.yrgopelago.se/centralbank/transferCode", $options);
-        $response = $response->getBody()->getContents();
-        $response = json_decode($response, true);
-
-        return true;
-    } catch (\Exception $e) {
-        return "There was an issue with your bank deposit.";
-    }
-}
 
 function countTotalCost(string $arrivalDate, string $departureDate, string $roomID)
 {
@@ -258,4 +234,27 @@ function insertDate(string $name, string $arrivalDate, string $departureDate, st
     $stmtInsert2->bindParam(':room_id', $roomID);
     $stmtInsert2->bindParam(':reservation_id', $reservationId);
     $stmtInsert2->execute();
+}
+
+function deposit(string $transfercode): bool | string
+{
+
+    $client = new \GuzzleHttp\Client();
+
+    $options = [
+        'form_params' => [
+            'user' => 'Alfred',
+            'transferCode' => $transfercode
+        ]
+    ];
+    try {
+
+        $response = $client->post("https://www.yrgopelago.se/centralbank/deposit", $options);
+        $response = $response->getBody()->getContents();
+        $response = json_decode($response, true);
+
+        return true;
+    } catch (\Exception $e) {
+        return "There was an issue with your bank deposit.";
+    }
 }

@@ -15,19 +15,22 @@ require __DIR__ . '/hotelFunctions.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alunpelago</title>
     <link rel="stylesheet" href="./vendor/benhall14/php-calendar/html/css/calendar.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/global.css">
 </head>
 
 <body>
     <header>
+        <div class="hero">
+            <!-- <img src="./pelago.jpg" alt="Pelago island"> -->
+        </div>
         <nav>
             <h1>Moster Dagnys Vandrarhem</h1>
         </nav>
     </header>
     <main>
         <div class="calendar-wrapper">
-            <div class="rooms">
+            <div class="visible">
                 <h3>Enkelrum</h3>
                 <?php drawCalendar(1, $calendar1); ?>
             </div>
@@ -56,11 +59,12 @@ require __DIR__ . '/hotelFunctions.php';
             <input type="text" name="name" class="form-input" required>
             <label for="transfercode">Transfercode:</label>
             <input type="text" name="transfercode" class="form-input">
-            <button name="submit" type="submit">Submit reservation</button>
+            <button name="submit" type="submit">SUBMIT</button>
         </form>
 
         <div>
-            <h3 class="totalcost"></h3>
+            <h4 class="totalcost">
+            </h4>
         </div>
 
     </main>

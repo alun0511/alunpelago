@@ -30,30 +30,28 @@ if (isset($_POST['name'], $_POST['arrival'], $_POST['departure'], $_POST['room']
 
     if ($result !== true) $message['error'] = $result;
 
+    $result = deposit($transfercode);
+
+    if ($result !== true) $message['error'] = $result;
+
     if (isset($message['error'])) {
         echo json_encode($message);
-    } else {
-
-        insertDate($name, $arrivalDate, $departureDate, $roomID);
-
-        $result = deposit($transfercode);
-        if ($result !== true) {
-            $message['error'] = $result;
-            echo json_encode($message);
-        } else {
-
-            $bookingResponse = [
-                "island" => "Pelagon",
-                "hotel" => "Moster Dagnys",
-                "arrival_date" => $arrivalDate,
-                "departure_date" => $departureDate,
-                "total_cost" => $totalCost,
-                "stars" => "1",
-                // "features" => ["name" => "", "cost" => ""],
-                "addtional_info" => "Thank you for making the right choice by staying at Moster Dagnys. We hope you will enjoy your stay."
-            ];
-
-            echo json_encode($bookingResponse);
-        }
+        die();
     }
+
+    insertDate($name, $arrivalDate, $departureDate, $roomID);
+
+
+    $bookingResponse = [
+        "island" => "Pelagon",
+        "hotel" => "Moster Dagnys",
+        "arrival_date" => $arrivalDate,
+        "departure_date" => $departureDate,
+        "total_cost" => $totalCost,
+        "stars" => "1",
+        "features" => ["name" => "", "cost" => ""],
+        "addtional_info" => "Thank you for making the right choice by staying at Moster Dagnys. We hope you will enjoy your stay."
+    ];
+
+    echo json_encode($bookingResponse);
 }
