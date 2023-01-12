@@ -3,10 +3,11 @@
 }
 
 :root {
-  --color-light-breeze: #4dc0fa;
-  --color-lighter-breeze: #9cdeff;
-  --color-light-sun: #faf690;
+  --color-light-breeze: #008cffc4;
+  --color-lighter-breeze: #99cfffa5;
+  --color-light-sun: #faf690d2;
   --color-healthy-shrimp: #fa6675;
+  --color-green-gray: #4f4f4f;
 }
 
 @font-face {

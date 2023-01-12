@@ -1,1 +1,25 @@
-
+{
+  "vacation": [],
+  "0": [
+    {
+      "island": "Pelagon",
+      "hotel": "Moster Dagnys",
+      "arrival_date": "2023-01-06",
+      "departure_date": "2023-01-07",
+      "total_cost": 6,
+      "stars": "1",
+      "features": { "name": "", "cost": "" },
+      "addtional_info": "Thank you for making the right choice by staying at Moster Dagnys. We hope you will enjoy your stay."
+    }
+  ],
+  "1": {
+    "island": "Pelagon",
+    "hotel": "Moster Dagnys",
+    "arrival_date": "2023-01-25",
+    "departure_date": "2023-01-26",
+    "total_cost": 6,
+    "stars": "1",
+    "features": { "name": "", "cost": "" },
+    "addtional_info": "Thank you for making the right choice by staying at Moster Dagnys. We hope you will enjoy your stay."
+  }
+}

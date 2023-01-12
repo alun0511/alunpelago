@@ -1,7 +1,11 @@
 body {
   margin: 0 auto;
-  padding: 5%;
-  font-family: 'Playfair', Georgia, 'Times New Roman', Times, serif;
+  padding: 0 1% 0 1%;
+  background-color: bisque;
+  background-image: url('/images/10\ 1\ Koster\ .jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: auto;
 }
 
 header {
@@ -9,48 +13,35 @@ header {
   justify-content: center;
 }
 nav {
-  position: absolute;
   top: 0px;
 }
 
 main {
-  margin-top: 20px;
-  width: 100vh;
+  width: 100%;
   column-gap: 10px;
-  background-color: var(--color-light-sun);
-  color: rgb(44, 42, 42);
   border-radius: 10px;
 }
 
 .calendar-wrapper {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 1fr;
   background-color: var(--color-light-breeze);
   border-radius: 5px;
-  column-gap: 20px;
   padding: 20px;
 }
 
-main .calendar:nth-of-type(1) {
-  grid-column: 1;
-}
-
-main .calendar:nth-of-type(2) {
-  grid-column: 2;
-}
-main .calendar:nth-of-type(3) {
-  grid-column: 3;
+section {
+  background-color: var(--color-lighter-breeze);
+  grid-row: 2;
+  border-radius: 5px;
 }
 
 form {
-  grid-row: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  background-color: var(--color-lighter-breeze);
+  font-family: sans-serif;
   padding: 20px;
-  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
 }
 
 button {
@@ -64,6 +55,7 @@ button {
   font-weight: bold;
   border-radius: 5px;
   transition: ease-in-out 0.2s;
+  margin: 10px;
 }
 button:active {
   border: 4px black;
@@ -80,20 +72,61 @@ select {
   border: 1px solid black;
 }
 
-h4 {
-  font-family: Arial, Helvetica, sans-serif;
-  margin-left: 20px;
+h1 {
+  font-family: 'Playfair', Georgia, 'Times New Roman', Times, serif;
+  word-spacing: 5px;
+  font-weight: bold;
+  font-size: 30px;
 }
 
-h3 {
+h2 {
+  font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   margin-top: 0;
 }
 
+h4 {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000;
+  margin-left: 20px;
+}
+
 .visible {
   display: inline;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  column-gap: 20px;
 }
 
 .rooms {
   display: none;
+}
+
+.calendar-wrapper img {
+  grid-column: 2;
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 0;
+  grid-row: 1;
+}
+
+.calendar {
+  height: 80%;
+}
+
+nav {
+  background-color: rgba(240, 255, 255, 0.202);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.roomSelect,
+.form-input.arrival,
+.form-input.departure {
+  margin: 5px;
 }

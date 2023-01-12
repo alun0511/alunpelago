@@ -53,5 +53,15 @@ if (isset($_POST['name'], $_POST['arrival'], $_POST['departure'], $_POST['room']
         "addtional_info" => "Thank you for making the right choice by staying at Moster Dagnys. We hope you will enjoy your stay."
     ];
 
+    $vacation = $bookingResponse;
+
+    $logbook = file_get_contents('logbook.json');
+    $tempArray = json_decode($logbook, true);
+    array_push($tempArray, $vacation);
+    $jsonData = json_encode($tempArray);
+    file_put_contents('logbook.json', $jsonData);
+
     echo json_encode($bookingResponse);
+
+    // file_put_contents('logbook.json', json_encode($bookingResponse, FILE_APPEND));
 }
