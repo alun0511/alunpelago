@@ -13,7 +13,6 @@
 @font-face {
   font-family: 'Playfair';
   src: local('Playfair'),
-    /* Get the user's local font if it exists */
-      url('/fonts/PlayfairDisplay-VariableFont.woffw') format('woff1'),
+    url('/fonts/PlayfairDisplay-VariableFont.woffw') format('woff1'),
     url('/fonts/PlayfairDisplay-VariableFont.woff') format('woff2');
 }

@@ -21,9 +21,6 @@ require __DIR__ . '/hotelFunctions.php';
 
 <body>
     <header>
-        <div class="hero">
-            <!-- <img src="./pelago.jpg" alt="Pelago island"> -->
-        </div>
         <nav>
             <h1>Moster Dagnys Vandrarhem</h1>
             <span>I'm finding it hard to believe..</span>
