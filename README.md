@@ -8,6 +8,10 @@ In the beautiful archipelago of Bohuslehn the picturesque island of Pelago can b
 
 20 feet from the shore a small white-blue cottage can be found. Moster Dagnys has remained the same since it was built nearly a century ago, despite the modernization of surrounding buildings. Dive in to the deep blue sea or ride it on a jet ski, walk around the island on car free roads and breathe the salty breeze. 
 
+# Instructions
+
+If the website looks strange please try deleting cache and history or change browser. There is something wrong with the stylesheets in especially firefox. 
+
 # Code review
 
 1. example.js:10-15 - Remember to think about X and this could be refactored using the amazing Y function.
