@@ -10,7 +10,7 @@ In the beautiful archipelago of Bohuslehn the picturesque island of Pelago can b
 
 # Instructions
 
-If the website looks strange please try changing browser. There is something wrong with the stylesheets in especially firefox. 
+If the website looks strange please try deleting cache and history or change browser. There is something wrong with the stylesheets in especially firefox. 
 
 # Code review
 
