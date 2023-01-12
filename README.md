@@ -2,15 +2,11 @@
 
 # North-east Koster
 
-In the beautiful archipelago of Bohuslän the picturesque North-east Koster can be found. With sprawling nature and wildlife above and below the sea it makes the perfect retreat from the bustling city-life. 
+In the beautiful archipelago of Bohuslehn the picturesque island of Pelago can be found. With sprawling nature and wildlife above and below the sea it makes the perfect retreat from the bustling city-life. 
 
 # Moster Dagnys
 
 20 feet from the shore a small white-blue cottage can be found. Moster Dagnys has remained the same since it was built nearly a century ago, despite the modernization of surrounding buildings. Dive in to the deep blue sea or ride it on a jet ski, walk around the island on car free roads and breathe the salty breeze. 
-
-# Instructions
-
-If your project requires some installation or similar, please inform your user 'bout it. For instance, if you want a more decent indentation of your .php files, you could edit [.editorconfig]('/.editorconfig').
 
 # Code review
 
