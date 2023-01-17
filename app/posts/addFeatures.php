@@ -5,9 +5,13 @@ require '../autoload.php';
 require '../../hotelFunctions.php';
 
 if (isset($_POST['featureName'], $_POST['featureCost'])) {
-    $featureName = htmlspecialchars(trim($_POST['featureName']), ENT_QUOTES);
-    $featureCost = (int)htmlspecialchars(trim($_POST['featureCost']), ENT_QUOTES);
+    $type = htmlspecialchars(trim($_POST['featureName']), ENT_QUOTES);
+    $price = (int)htmlspecialchars(trim($_POST['featureCost']), ENT_QUOTES);
 
-    $dbName = 'database.db';
-    $db = connect($dbName);
+    $stmtSelect = $db->prepare("INSERT INTO features (type,price) VALUES (:type, :price)");
+
+    $stmtSelect->bindParam(':type', $type, PDO::PARAM_STR);
+    $stmtSelect->bindParam(':price', $price, PDO::PARAM_INT);
+
+    $stmtSelect->execute();
 }
