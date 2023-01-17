@@ -258,3 +258,15 @@ function deposit(string $transfercode): bool | string
         return "There was an issue with your bank deposit.";
     }
 }
+
+function getFeatures()
+{
+    $dbName = 'database.db';
+    $db = connect($dbName);
+
+    $stmt = $db->query(
+        "SELECT * FROM features"
+    );
+    $data = $stmt->fetchAll();
+    return $data;
+}
