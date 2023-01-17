@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 require '../autoload.php';
-require '../../hotelFunctions.php';
 
 $redirectPage = 'https://www.alune.se/alunpelago/hotel-manager.php';
 $redirectPage = 'http://localhost:4000/hotel-manager.php';

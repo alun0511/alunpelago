@@ -6,5 +6,7 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
+require '../../hotelFunctions.php';
+
 $dbName = '../database.db';
 $db = connect($dbName);
