@@ -72,8 +72,10 @@ $features = getFeatures();
                 <input type="text" name="transfercode" class="form-input transfercode">
 
                 <?php foreach ($features as $feature) : ?>
-                    <label for="<?= $feature['type'] ?>"><?= $feature['type'] ?> $ <?= $feature['price'] ?></label>
-                    <input type="checkbox" name="<?= $feature['type'] ?>" value="<?= $feature['price'] ?>" id="<?= $feature['type'] ?>">
+                    <div>
+                        <input type="checkbox" name="<?= $feature['type'] ?>" value="<?= $feature['price'] ?>" id="<?= $feature['type'] ?>">
+                        <label for="<?= $feature['type'] ?>"><?= $feature['type'] ?> $ <?= $feature['price'] ?></label>
+                    </div>
                 <?php endforeach ?>
 
                 <button name="submit" type="submit">SUBMIT</button>
