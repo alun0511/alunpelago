@@ -2,7 +2,6 @@
 
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/hotelFunctions.php';
 
 ?>
 <!DOCTYPE html>
@@ -26,7 +25,6 @@ require __DIR__ . '/hotelFunctions.php';
             <span>We're in heaven</span>
         </nav>
     </header>
-    <?php var_dump($_SESSION) ?>
     <main style="display:flex; flex-direction:column; align-items:center">
         <?php if (isset($_SESSION['user'])) : ?>
             <h2>Add features</h2>
