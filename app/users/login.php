@@ -11,6 +11,7 @@ $dotenv->load();
 //create an array for eventual errors to be stored in
 $_SESSION['errors'] = [];
 //Set our redirect page to a variable if it would need to be swapped to something else in the future
+$redirectPage = 'https://www.alune.se/alunpelago/hotel-manager.php';
 $redirectPage = 'http://localhost:4000/hotel-manager.php';
 
 //Compare given username and password to data in .env
