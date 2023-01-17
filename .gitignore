@@ -1,3 +1,4 @@
 node_modules
 vendor
-.env.example
+.env
+.DS_store
