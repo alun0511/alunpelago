@@ -2,7 +2,7 @@
 
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/vendor/autoload.php';
-
+require __DIR__ . '/hotelFunctions.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

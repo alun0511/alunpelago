@@ -1,10 +1,14 @@
 <?php
 
 declare(strict_types=1);
-require '../autoload.php';
+require '../../app/autoload.php';
+require '../../hotelFunctions.php';
 
 $redirectPage = 'https://www.alune.se/alunpelago/hotel-manager.php';
 $redirectPage = 'http://localhost:4000/hotel-manager.php';
+
+$dbName = 'database.db';
+$db = connect($dbName);
 
 if (isset($_POST['featureName'], $_POST['featureCost'])) {
     $type = htmlspecialchars(trim($_POST['featureName']), ENT_QUOTES);
