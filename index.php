@@ -73,7 +73,7 @@ $features = getFeatures();
 
                 <?php foreach ($features as $feature) : ?>
                     <div>
-                        <input type="checkbox" name="<?= $feature['type'] ?>" value="<?= $feature['price'] ?>" id="<?= $feature['type'] ?>">
+                        <input type="checkbox" name="features[]" value="<?= $feature['id'] ?>" id="<?= $feature['type'] ?>">
                         <label for="<?= $feature['type'] ?>"><?= $feature['type'] ?> $ <?= $feature['price'] ?></label>
                     </div>
                 <?php endforeach ?>

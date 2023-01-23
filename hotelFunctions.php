@@ -183,7 +183,7 @@ function transferCodeValidator(string $transfercode, int $totalCost): bool | str
 }
 
 
-function countTotalCost(string $arrivalDate, string $departureDate, string $roomID)
+function countTotalCost(string $arrivalDate, string $departureDate, string $roomID, int $featureCost)
 {
     $arrivalDateTime = new DateTime($arrivalDate);
     $departureDateTime = new DateTime($departureDate);
@@ -192,11 +192,11 @@ function countTotalCost(string $arrivalDate, string $departureDate, string $room
     $daysInterval = (int)$daysInterval;
 
     if ($roomID === "1") {
-        return ($daysInterval * 2);
+        return ($daysInterval * 2) + $featureCost;
     } elseif ($roomID === "2") {
-        return ($daysInterval * 6);
+        return ($daysInterval * 6) + $featureCost;
     } elseif ($roomID === "3") {
-        return ($daysInterval * 8);
+        return ($daysInterval * 8) + $featureCost;
     }
 }
 
@@ -243,7 +243,7 @@ function deposit(string $transfercode): bool | string
 
     $options = [
         'form_params' => [
-            'user' => 'Alfred',
+            'user' => 'Hampus',
             'transferCode' => $transfercode
         ]
     ];
@@ -269,4 +269,27 @@ function getFeatures(): array
     );
     $data = $stmt->fetchAll();
     return $data;
+}
+
+function getChosenFeatures(int $featureId): array
+{
+    $dbName = 'database.db';
+    $db = connect($dbName);
+
+    $stmt = $db->prepare('SELECT type, price FROM features where id=:id');
+    $stmt->bindParam(':id', $featureId, PDO::PARAM_INT);
+    $stmt->execute();
+    $features = $stmt->fetchAll();
+    return $features[0];
+}
+function getFeatureCost(array $chosenFeatures): int
+{
+    foreach ($chosenFeatures as $feature) {
+        $features[] = getChosenFeatures($feature);
+    }
+    $featureCost = 0;
+    foreach ($features as $key => $feature) {
+        $featureCost = $featureCost + $feature['price'];
+    }
+    return $featureCost;
 }
