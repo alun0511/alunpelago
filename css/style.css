@@ -139,6 +139,7 @@ nav {
 .remove-form {
   background-color: var(--color-lighter-breeze);
   border: 1px solid black;
+  border-radius: 5px;
 }
 .remove-form label,
 .remove-form input {
