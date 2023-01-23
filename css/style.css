@@ -130,3 +130,18 @@ nav {
 .form-input.departure {
   margin: 5px;
 }
+
+.admin.feature {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.remove-form {
+  background-color: var(--color-lighter-breeze);
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.remove-form label,
+.remove-form input {
+  cursor: pointer;
+}

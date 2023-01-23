@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/hotelFunctions.php';
-require 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 header('Content-Type: application/json');
 
@@ -18,14 +18,22 @@ if (isset($_POST['name'], $_POST['arrival'], $_POST['departure'], $_POST['room']
     $roomID = htmlspecialchars($_POST['room'], ENT_QUOTES);
     $transfercode = htmlspecialchars($_POST['transfercode'], ENT_QUOTES);
 
+    //Get info about the chosen features
+    if (!empty($_POST['features'])) {
+        $chosenFeatures = $_POST['features'];
+        $chosenFeatures = array_map('intval', $chosenFeatures);
+        $featureCost = getFeatureCost($chosenFeatures);
+    } else {
+        $chosenFeatures = array();
+        $featureCost = 0;
+    }
 
 
-    $totalCost = countTotalCost($arrivalDate, $departureDate, $roomID);
+    $totalCost = countTotalCost($arrivalDate, $departureDate, $roomID, $featureCost);
 
     $result = transferCodeValidator($transfercode, $totalCost);
 
     if ($result !== true) $message['error'] = $result;
-
     $result = testDate($name, $arrivalDate, $departureDate, $roomID);
 
     if ($result !== true) $message['error'] = $result;
@@ -41,7 +49,11 @@ if (isset($_POST['name'], $_POST['arrival'], $_POST['departure'], $_POST['room']
 
     insertDate($name, $arrivalDate, $departureDate, $roomID);
 
-
+    foreach ($chosenFeatures as $feature) {
+        $data = getChosenFeatures($feature);
+        $postFeatures[] = $data;
+    }
+    die(var_dump($postFeatures));
     $bookingResponse = [
         "island" => "Pelagon",
         "hotel" => "Moster Dagnys",
@@ -49,7 +61,7 @@ if (isset($_POST['name'], $_POST['arrival'], $_POST['departure'], $_POST['room']
         "departure_date" => $departureDate,
         "total_cost" => $totalCost,
         "stars" => "1",
-        "features" => ["name" => "", "cost" => ""],
+        "features" => $postFeatures,
         "addtional_info" => "Thank you for making the right choice by staying at Moster Dagnys. We hope you will enjoy your stay."
     ];
 

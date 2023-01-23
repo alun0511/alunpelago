@@ -1,8 +1,9 @@
 <?php
 
-require 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/hotelFunctions.php';
 
+$features = getFeatures();
 
 ?>
 
@@ -69,6 +70,14 @@ require __DIR__ . '/hotelFunctions.php';
                 <input type="text" name="name" class="form-input name" required>
                 <label for="transfercode">Transfercode:</label>
                 <input type="text" name="transfercode" class="form-input transfercode">
+
+                <?php foreach ($features as $feature) : ?>
+                    <div>
+                        <input type="checkbox" name="features[]" value="<?= $feature['id'] ?>" id="<?= $feature['type'] ?>">
+                        <label for="<?= $feature['type'] ?>"><?= $feature['type'] ?> $ <?= $feature['price'] ?></label>
+                    </div>
+                <?php endforeach ?>
+
                 <button name="submit" type="submit">SUBMIT</button>
                 <div>
                     <h4 class="totalcost">
