@@ -259,7 +259,7 @@ function deposit(string $transfercode): bool | string
     }
 }
 
-function getFeatures()
+function getFeatures(): array
 {
     $dbName = 'database.db';
     $db = connect($dbName);

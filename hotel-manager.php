@@ -35,6 +35,20 @@ require __DIR__ . '/hotelFunctions.php';
                 <input type="number" name="featureCost" id="featureCost" required>
                 <button type="submit">Add feature</button>
             </form>
+
+            <?php $features = getFeatures(); ?>
+            <form class="remove-form" action="app/posts/removeFeatures.php" method="post">
+                <h3>Remove current features</h3>
+                <?php foreach ($features as $feature) : ?>
+                    <div class="admin feature">
+                        <p><?= $feature['id'] . ' - ' .  $feature['type'] . ' - $' . $feature['price'] ?></p>
+                        <input type="checkbox" name="features[]" value="<?= $feature['id'] ?>" id="id<?= $feature['id'] ?>">
+                        <label for="id<?= $feature['id'] ?>">Remove</label>
+                    </div>
+                <?php endforeach ?>
+                <button type="submit">Remove features</button>
+            </form>
+
         <?php else : ?>
             <h2>Login</h2>
             <form action="app/users/login.php" method="post">
